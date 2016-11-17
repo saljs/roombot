@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Roombot CTRL</title>
+        <link rel="stylesheet" type="text/css" href="http://lsblk.tk/stylesheet.css">
+        <style>
+            body
+            {
+                padding-top: 50px;
+                text-align: center;
+            }
+        </style>
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <script type="text/javascript">
+            window.addEventListener("keydown", moveRobot, false);
+            window.addEventListener("keyup", sendStop, false);
+            var websocket = new WebSocket('ws://127.0.0.1:9000', 'roombot-protocol');
+            var timer = setInterval(refreshImg, 100);
+            function sendStop(key)
+            {
+                if(key.keyCode >= 37 && key.keyCode <= 40)
+                {
+                    websocket.send('1');
+                }
+            }
+            function moveRobot(key)
+            {
+                switch(key.keyCode)
+                {
+                    case 37:
+                        websocket.send('4');
+                        break;
+                    case 38:
+                        websocket.send('2');
+                        break;
+                    case 39:
+                        websocket.send('5');
+                        break;
+                    case 40:
+                        websocket.send('3');
+                        break;
+                }
+            }
+            function refreshImg()
+            {
+                websocket.send('0');
+            }
+            websocket.onopen = function (event) {
+                  document.getElementById("title").style.color = 'green';
+            };
+            websocket.onmessage = function (event)
+            {
+                var robotdata = JSON.parse(event.data);
+                document.getElementById("webcam").src = robotdata.webcam;
+                document.getElementById("distance").innerHTML = robotdata.distance;
+                if(robotdata.vac)
+                {
+                    document.getElementById("vac").style.color = 'green';
+                }
+                else
+                {
+                    document.getelementById("vac").style.color = 'red';
+                }
+            };
+        </script>
+        </head>
+    <body>
+        <h1 id="title">Roombot CTRL</h1>
+        <img id="webcam" src="">
+        </br>
+        <div id="distance"></div>
+        <h3 id="vac" style="color:red;">Vaccumming</h3>
+    </body>
+</html>
