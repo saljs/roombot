@@ -56,7 +56,7 @@ void* vaccuum(void* arg)
 
 void toggleVac()
 {
-    if(vacOnbool)
+    if(!vacOnbool)
     {
         vacOnbool = true;
         pthread_t vacThread;
