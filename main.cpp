@@ -99,7 +99,7 @@ static struct lws_protocols protocols[] = {
         "roombot-protocol", // protocol name - very important!
         callback_roombot,   // callback
         0,                         // we don't use any per session data
-        512000
+        4096
     },
     {
         NULL, NULL, 0   /* End of list */
