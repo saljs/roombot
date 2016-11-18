@@ -22,6 +22,11 @@ static int callback_roombot(struct lws *wsi,
     }
     else if(reason == LWS_CALLBACK_RECEIVE)
     {
+        //if we're vaccuming, we don't want to be manually driving at all
+        if(isVacOn())
+        {
+            return 0;
+        }
         //decode the client response (super easy, not reall much to decode)
         int turnVal = atoi((char *)in);
         switch(turnVal)
@@ -74,7 +79,7 @@ static int callback_roombot(struct lws *wsi,
         
         //encode everything in JSON
         char* json = (char*) malloc(strlen(img) + 255);
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, isVacOn(), readSensor());
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), readSensor());
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
 

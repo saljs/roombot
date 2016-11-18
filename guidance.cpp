@@ -67,7 +67,7 @@ void toggleVac()
         vacOnbool = false;
     }
 }
-const char* isVacOn()
+const char* c_isVacOn()
 {
     if(vacOnbool)
     {
@@ -75,7 +75,14 @@ const char* isVacOn()
     }
     return "false";
 }
-
+bool isVacOn()
+{
+    if(vacOnbool)
+    {
+        return true;
+    }
+    return false;
+}
 void startCapture()
 {
     pthread_t captureThread;
@@ -125,11 +132,11 @@ int readSensor()
     delayMicroseconds(10);
     digitalWrite(TRIG, LOW);
     //Wait for ECHO start
-    while(digitalRead(ECHO) == LOW && time(NULL) - timeout < 5);
+    while(digitalRead(ECHO) == LOW && time(NULL) - timeout < 2);
     //Wait for ECHO end
     timeout = time(NULL);
     long startTime = micros();
-    while(digitalRead(ECHO) == HIGH && time(NULL) - timeout < 5);
+    while(digitalRead(ECHO) == HIGH && time(NULL) - timeout < 2);
     long travelTime = micros() - startTime;
     //Get distance in cm
     return (int)(travelTime * 0.01715);

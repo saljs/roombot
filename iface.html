@@ -10,6 +10,11 @@
                 padding-top: 50px;
                 text-align: center;
             }
+            #vac
+            {
+                color: red;
+                cursor: pointer;
+            }
         </style>
         <meta content="width=device-width, initial-scale=1" name="viewport">
         <script type="text/javascript">
@@ -74,6 +79,6 @@
         <img id="webcam" src="">
         </br>
         <div id="distance"></div>
-        <h3 id="vac" style="color:red;">Vaccumming</h3>
+        <h3 id="vac" onclick="websocket.send('6');">Vaccumming</h3>
     </body>
 </html>

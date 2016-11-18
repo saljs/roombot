@@ -5,7 +5,8 @@
 void* capture(void* arg);
 void* vaccuum(void* arg);
 void toggleVac();
-const char* isVacOn();
+const char* c_isVacOn();
+bool isVacOn();
 void startCapture();
 void stopCapture();
 int initHardware();
