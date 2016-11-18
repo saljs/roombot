@@ -73,7 +73,7 @@ static int callback_roombot(struct lws *wsi,
         
         //encode everything in JSON
         char* json = (char*) malloc(strlen(img) + 255);
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":\"%s\",\"distance\":%d}", img, isVacOn(), readSensor());
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, isVacOn(), readSensor());
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
 
@@ -98,7 +98,7 @@ static struct lws_protocols protocols[] = {
         "roombot-protocol", // protocol name - very important!
         callback_roombot,   // callback
         0,                         // we don't use any per session data
-        16384
+        512000
     },
     {
         NULL, NULL, 0   /* End of list */

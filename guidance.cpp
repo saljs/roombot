@@ -71,9 +71,9 @@ const char* isVacOn()
 {
     if(vacOnbool)
     {
-        return "True";
+        return "true";
     }
-    return "False";
+    return "false";
 }
 
 void startCapture()
