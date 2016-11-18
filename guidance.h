@@ -8,6 +8,7 @@ void toggleVac();
 const char* isVacOn();
 void startCapture();
 void stopCapture();
+int initHardware();
 int readSensor();
 int mkUpMind();
 void turn(int degrees);

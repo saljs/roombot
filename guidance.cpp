@@ -6,7 +6,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include <WiringPi.h>
+#include <wiringPi.h>
 
 #include "guidance.h"
 #include "hardware.h"
@@ -85,6 +85,23 @@ void startCapture()
 void stopCapture()
 {
     closeThread = true;
+}
+
+int initHardware()
+{
+	if (wiringPiSetup () == -1)
+    {
+        return 1;
+    }
+	pinMode(MOTORS, OUTPUT);
+	pinMode(MOTOR_L, OUTPUT);
+	pinMode(MOTOR_L, OUTPUT);
+	pinMode(SERVO, OUTPUT);
+	pinMode(VAC, OUTPUT);
+	pinMode(STATUS_LED, OUTPUT);
+	pinMode(TRIG, OUTPUT);
+	pinMode(ECHO, INPUT);
+	return 0;
 }
 
 char* base64img()

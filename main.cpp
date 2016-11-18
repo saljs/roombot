@@ -104,6 +104,11 @@ static struct lws_protocols protocols[] = {
 };
 int main(void) 
 {
+	if(initHardware() != 0)
+	{
+		fprintf(stderr, "WiringPi init failed\n");
+		return -1;
+	}
     startCapture();
     sleep(1);
     // server url will be http://localhost:9000
