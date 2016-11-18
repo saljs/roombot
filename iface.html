@@ -15,36 +15,40 @@
         <script type="text/javascript">
             window.addEventListener("keydown", moveRobot, false);
             window.addEventListener("keyup", sendStop, false);
+            var keyheld = false;
             var websocket = new WebSocket('ws://roombot:9000', 'roombot-protocol');
-            //var timer = setInterval(refreshImg, 100);
             function sendStop(key)
             {
                 if(key.keyCode >= 37 && key.keyCode <= 40)
                 {
                     websocket.send('1');
+                    keyheld = false;
                 }
             }
             function moveRobot(key)
             {
-                switch(key.keyCode)
+                if(!keyheld)
                 {
-                    case 37:
-                        websocket.send('4');
-                        break;
-                    case 38:
-                        websocket.send('2');
-                        break;
-                    case 39:
-                        websocket.send('5');
-                        break;
-                    case 40:
-                        websocket.send('3');
-                        break;
+                    switch(key.keyCode)
+                    {
+                        case 37:
+                            websocket.send('4');
+                            keyheld = true;
+                            break;
+                        case 38:
+                            websocket.send('2');
+                            keyheld = true;
+                            break;
+                        case 39:
+                            websocket.send('5');
+                            keyheld = true;
+                            break;
+                        case 40:
+                            websocket.send('3');
+                            keyheld = true;
+                            break;
+                    }
                 }
-            }
-            function refreshImg()
-            {
-                websocket.send('0');
             }
             websocket.onopen = function (event) {
                   document.getElementById("title").style.color = 'green';
@@ -53,14 +57,14 @@
             {
                 var robotdata = JSON.parse(event.data);
                 document.getElementById("webcam").src = robotdata.webcam;
-                document.getElementById("distance").innerHTML = robotdata.distance;
+                document.getElementById("distance").innerHTML = "Distance " + robotdata.distance + " CM";
                 if(robotdata.vac)
                 {
                     document.getElementById("vac").style.color = 'green';
                 }
                 else
                 {
-                    document.getelementById("vac").style.color = 'red';
+                    document.getElementById("vac").style.color = 'red';
                 }
             };
         </script>

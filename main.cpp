@@ -22,7 +22,6 @@ static int callback_roombot(struct lws *wsi,
     }
     else if(reason == LWS_CALLBACK_RECEIVE)
     {
-
         //decode the client response (super easy, not reall much to decode)
         int turnVal = atoi((char *)in);
         switch(turnVal)
@@ -64,7 +63,9 @@ static int callback_roombot(struct lws *wsi,
                 toggleVac();
                 break;
         }
-        
+    }
+    else if(reason == LWS_CALLBACK_SERVER_WRITEABLE)
+    {
         char *img = base64img();
         // create a buffer to hold our response
         // it has to have some pre and post padding. You don't need to care
@@ -126,7 +127,7 @@ int main(void)
     info.uid = -1;
     info.options = 0;
     info.max_http_header_pool = 16;
-    info.timeout_secs = 5;
+    info.timeout_secs = 60;
     info.server_string = "roombot";
     // create libwebsocket context representing this server
     context = lws_create_context(&info);
@@ -141,10 +142,7 @@ int main(void)
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
         lws_service(context, 100);
-        // lws_service will process all waiting events with their
-        // callback functions and then wait 50 ms.
-        // (this is a single threaded webserver and this will keep our server
-        // from generating load while there are not requests to process)
+        lws_callback_on_writable_all_protocol(context, &protocols[1]);
     }
    
     lws_context_destroy(context);
