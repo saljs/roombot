@@ -119,17 +119,17 @@ char* base64img()
 int readSensor()
 {
     //we don't want to get stuch in an infinite loop, so set a small timout
-    time_t timeout = time();
+    time_t timeout = time(NULL);
     //Send TRIG pulse
     digitalWrite(TRIG, HIGH);
     delayMicroseconds(10);
     digitalWrite(TRIG, LOW);
     //Wait for ECHO start
-    while(digitalRead(ECHO) == LOW && time() - timout < 1000);
+    while(digitalRead(ECHO) == LOW && time(NULL) - timeout < 1000);
     //Wait for ECHO end
-    time_t timeout = time();
+    timeout = time(NULL);
     long startTime = micros();
-    while(digitalRead(ECHO) == HIGH && time() - timout < 1000);
+    while(digitalRead(ECHO) == HIGH && time(NULL) - timeout < 1000);
     long travelTime = micros() - startTime;
     //Get distance in cm
     return (int)(travelTime * 0.01715);
