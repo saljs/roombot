@@ -73,7 +73,7 @@ static int callback_roombot(struct lws *wsi,
         
         //encode everything in JSON
         char* json = (char*) malloc(strlen(img) + 255);
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, isVacOn(), readSensor());
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":\"%s\",\"distance\":%d}", img, isVacOn(), readSensor());
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
 
@@ -140,7 +140,7 @@ int main(void)
    
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
-        lws_service(context, 50);
+        lws_service(context, 100);
         // lws_service will process all waiting events with their
         // callback functions and then wait 50 ms.
         // (this is a single threaded webserver and this will keep our server
