@@ -16,7 +16,7 @@
             window.addEventListener("keydown", moveRobot, false);
             window.addEventListener("keyup", sendStop, false);
             var websocket = new WebSocket('ws://roombot:9000', 'roombot-protocol');
-            var timer = setInterval(refreshImg, 100);
+            //var timer = setInterval(refreshImg, 100);
             function sendStop(key)
             {
                 if(key.keyCode >= 37 && key.keyCode <= 40)
