@@ -79,7 +79,13 @@ static int callback_roombot(struct lws *wsi,
         
         //encode everything in JSON
         char* json = (char*) malloc(strlen(img) + 255);
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), readSensor());
+        //if vacuming, don't bother trying to read from distance sensor
+        int distance = 0;
+        if(!isVacOn())
+        {
+            distance = readSensor();
+        }
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), distance);
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
 
