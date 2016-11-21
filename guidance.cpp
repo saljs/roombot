@@ -119,7 +119,7 @@ char* base64img()
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
     if(imgstring == NULL)
     {
-        reuturn NULL;
+        return NULL;
     }
     memset(imgstring, 0, strlen(encoded.c_str() + 25));
     strcat(imgstring, "data:image/jpeg;base64,");
