@@ -98,9 +98,9 @@ static int callback_roombot(struct lws *wsi,
         //write image to client
         strcpy(buf + LWS_SEND_BUFFER_PRE_PADDING, json);
         lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], strlen(json), LWS_WRITE_TEXT);
-        free(buf);
         free(img);
         free(json);
+        free(buf);
     }
     
     return 0;
