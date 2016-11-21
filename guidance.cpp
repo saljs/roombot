@@ -117,6 +117,10 @@ char* base64img()
     imencode(".jpeg", cameraFrame, toSend);
     string encoded = base64_encode(&*toSend.begin(), toSend.size());
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
+    if(imgstring == NULL)
+    {
+        reuturn NULL;
+    }
     memset(imgstring, 0, strlen(encoded.c_str() + 25));
     strcat(imgstring, "data:image/jpeg;base64,");
     strcat(imgstring, encoded.c_str());

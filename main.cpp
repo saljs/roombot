@@ -72,6 +72,10 @@ static int callback_roombot(struct lws *wsi,
     else if(reason == LWS_CALLBACK_SERVER_WRITEABLE)
     {
         char *img = base64img();
+        if(img == NULL)
+        {
+            return -1;
+        }
         // create a buffer to hold our response
         // it has to have some pre and post padding. You don't need to care
         // what comes there, libwebsockets will do everything for you. For more info see
@@ -79,15 +83,18 @@ static int callback_roombot(struct lws *wsi,
         
         //encode everything in JSON
         char* json = (char*) malloc(strlen(img) + 255);
-        //if vacuming, don't bother trying to read from distance sensor
-        int distance = 0;
-        if(!isVacOn())
+        if(json == NULL)
         {
-            distance = readSensor();
+            return -1;
         }
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), distance);
+        //if vacuming, don't bother trying to read from distance sensor
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(),readSensor());
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
+        if(buf == NULL)
+        {
+            return -1;
+        }
 
         //write image to client
         strcpy(buf + LWS_SEND_BUFFER_PRE_PADDING, json);
