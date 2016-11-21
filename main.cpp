@@ -160,7 +160,10 @@ int main(void)
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) {
         lws_service(context, 100);
-        lws_callback_on_writable_all_protocol(context, &protocols[1]);
+        if(!isVacOn)
+        {
+            lws_callback_on_writable_all_protocol(context, &protocols[1]);
+        }
     }
    
     lws_context_destroy(context);
