@@ -87,8 +87,7 @@ static int callback_roombot(struct lws *wsi,
         {
             return -1;
         }
-        //if vacuming, don't bother trying to read from distance sensor
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(),readSensor());
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), readSensor());
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
         if(buf == NULL)
@@ -150,7 +149,8 @@ int main(void)
     // create libwebsocket context representing this server
     context = lws_create_context(&info);
 
-    if (context == NULL) {
+    if (context == NULL) 
+    {
         fprintf(stderr, "libwebsocket init failed\n");
         return -1;
     }
@@ -158,12 +158,10 @@ int main(void)
     printf("starting server...\n");
    
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
-    while (1) {
+    while (1) 
+    {
         lws_service(context, 100);
-        if(!isVacOn())
-        {
-            lws_callback_on_writable_all_protocol(context, &protocols[1]);
-        }
+        lws_callback_on_writable_all_protocol(context, &protocols[1]);
     }
    
     lws_context_destroy(context);

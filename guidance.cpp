@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <iostream>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 #include "base64.h"
 #include "opencv2/core/core.hpp"
