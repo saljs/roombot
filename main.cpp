@@ -22,6 +22,8 @@ static int callback_roombot(struct lws *wsi,
     }
     else if(reason == LWS_CALLBACK_RECEIVE)
     {
+        //decode the client response (super easy, not reall much to decode)
+        int turnVal = atoi((char *)in);
         //if we're vaccuming, we don't want to be manually driving at all
         if(isVacOn())
         {
@@ -32,8 +34,6 @@ static int callback_roombot(struct lws *wsi,
             }
             return 0;
         }
-        //decode the client response (super easy, not reall much to decode)
-        int turnVal = atoi((char *)in);
         switch(turnVal)
         {
             case 1:
