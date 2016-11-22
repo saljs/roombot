@@ -25,6 +25,11 @@ static int callback_roombot(struct lws *wsi,
         //if we're vaccuming, we don't want to be manually driving at all
         if(isVacOn())
         {
+            if(turnVal == 6)
+            {
+                //yeah, we should turn this off before exiting
+                toggleVac();
+            }
             return 0;
         }
         //decode the client response (super easy, not reall much to decode)
