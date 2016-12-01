@@ -175,7 +175,7 @@ int main(void)
     {
         lws_service(context, 100);
         distance = readSensor();
-        if(!isVacOn() && distance < 20)
+        if(!isVacOn() && distance < 20 && digitalRead(MOTORS) == 1 && digitalRead(MOTOR_L) == 0 && digitalRead(MOTOR_R) == 0)
         {
             digitalWrite(MOTORS, 0);
         }
