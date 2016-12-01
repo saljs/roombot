@@ -20,7 +20,13 @@ static int callback_roombot(struct lws *wsi,
 {
     if(reason == LWS_CALLBACK_ESTABLISHED)
     {
-        printf("connection established\n");
+        //turn on status LED (I like peopele to know when I'm creeping on them through a camera and when it's just software
+        digitalWrite(STATUS_LED, 1);
+    }
+    else if(reason == LWS_CALLBACK_CLOSED)
+    {
+        //bye
+        digitalWrite(STATUS_LED, 0);
     }
     else if(reason == LWS_CALLBACK_RECEIVE)
     {

@@ -36,7 +36,7 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
-    FILE* sevo = fopen("/dev/pi-blaster", "w");
+    FILE* servo = fopen("/dev/pi-blaster", "w");
     fprintf(servo, "%d=0.2\n", SERVO);
     while(vacOnbool)
     {
@@ -105,7 +105,6 @@ int initHardware()
 	pinMode(MOTORS, OUTPUT);
 	pinMode(MOTOR_L, OUTPUT);
 	pinMode(MOTOR_R, OUTPUT);
-	pinMode(SERVO, OUTPUT);
 	pinMode(VAC, OUTPUT);
 	pinMode(STATUS_LED, OUTPUT);
 	pinMode(TRIG, OUTPUT);
