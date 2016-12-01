@@ -36,11 +36,11 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
-    //TODO rotate servo
+    FILE* sevo = fopen("/dev/pi-blaster", "w");
+    fprintf(servo, "%d=0.2\n", SERVO);
     while(vacOnbool)
     {
-        int degrees = mkUpMind();
-        turn(degrees);
+        turn(mkUpMind());
         //go forward
         digitalWrite(MOTORS, 0);
         digitalWrite(MOTOR_L, 0);
@@ -49,7 +49,8 @@ void* vaccuum(void* arg)
         delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
     }
-    //TODO rotate servo back
+    fprintf(servo, "%d=0.3\n", SERVO);
+    fclose(servo);
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;

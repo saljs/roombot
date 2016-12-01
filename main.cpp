@@ -6,6 +6,8 @@
 #include "guidance.h"
 #include "hardware.h"
 
+int distance;
+
 static int callback_http(struct lws *wsi,
                          enum lws_callback_reasons reason, void *user,
                          void *in, size_t len)
@@ -92,7 +94,7 @@ static int callback_roombot(struct lws *wsi,
         {
             return -1;
         }
-        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), readSensor());
+        sprintf(json, "{\"webcam\":\"%s\",\"vac\":%s,\"distance\":%d}", img, c_isVacOn(), distance);
 
         unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + strlen(json) + LWS_SEND_BUFFER_POST_PADDING);
         if(buf == NULL)
@@ -160,12 +162,17 @@ int main(void)
         return -1;
     }
    
-    printf("starting server...\n");
+    printf("starting Roombot server...\n");
    
     // infinite loop, to end this server send SIGTERM. (CTRL+C)
     while (1) 
     {
         lws_service(context, 100);
+        distance = readSensor();
+        if(!isVacOn() && distance < 20)
+        {
+            digitalWrite(MOTORS, 0);
+        }
         lws_callback_on_writable_all_protocol(context, &protocols[1]);
     }
    

@@ -10,7 +10,7 @@
 #define TRIG 26
 #define ECHO 27
 
-#define SERVO 28
+#define SERVO 20 //This is the only pin defined in BCM instead of WiringPi
 #define VAC 29
 
 #define FOV 70      //field of view of webcam (degrees)
