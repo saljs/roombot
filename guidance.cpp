@@ -36,8 +36,13 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
+    char cmd[38];
+    sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
+    system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2\n", SERVO);
+    fprintf(servo, "%d=0.12\n", SERVO);
+    delay(500);
+    fprintf(servo, "release %d\n", SERVO);
     while(vacOnbool)
     {
         turn(mkUpMind());
@@ -49,7 +54,10 @@ void* vaccuum(void* arg)
         delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
     }
-    fprintf(servo, "%d=0.3\n", SERVO);
+    system(cmd);
+    fprintf(servo, "%d=0.2\n", SERVO);
+    delay(500);
+    fprintf(servo, "release %d\n", SERVO);
     fclose(servo);
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
