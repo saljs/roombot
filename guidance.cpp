@@ -41,8 +41,11 @@ void* vaccuum(void* arg)
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
     fprintf(servo, "%d=0.12", SERVO);
+    fclose(servo);
     delay(500);
+    servo = fopen("/dev/pi-blaster", "w");
     fprintf(servo, "release %d", SERVO);
+    fclose(servo);
     while(vacOnbool)
     {
         turn(mkUpMind());
@@ -55,9 +58,13 @@ void* vaccuum(void* arg)
         digitalWrite(MOTORS, 0);
     }
     system(cmd);
-    fprintf(servo, "%d=0.2\n", SERVO);
+
+    servo = fopen("/dev/pi-blaster", "w");
+    fprintf(servo, "%d=0.2", SERVO);
+    fclose(servo);
     delay(500);
-    fprintf(servo, "release %d\n", SERVO);
+    servo = fopen("/dev/pi-blaster", "w");
+    fprintf(servo, "release %d", SERVO);
     fclose(servo);
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
@@ -122,7 +129,9 @@ int initHardware()
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
     fprintf(servo, "%d=0.2", SERVO);
+    fclose(servo);
     delay(500);
+    servo = fopen("/dev/pi-blaster", "w");
     fprintf(servo, "release %d", SERVO);
     fclose(servo);
 	return 0;
