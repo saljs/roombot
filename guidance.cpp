@@ -40,9 +40,9 @@ void* vaccuum(void* arg)
     sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.12\n", SERVO);
+    fprintf(servo, "%d=0.12", SERVO);
     delay(500);
-    fprintf(servo, "release %d\n", SERVO);
+    fprintf(servo, "release %d", SERVO);
     while(vacOnbool)
     {
         turn(mkUpMind());
@@ -121,9 +121,9 @@ int initHardware()
     sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2\n", SERVO);
+    fprintf(servo, "%d=0.2", SERVO);
     delay(500);
-    fprintf(servo, "release %d\n", SERVO);
+    fprintf(servo, "release %d", SERVO);
     fclose(servo);
 	return 0;
 }
