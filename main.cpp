@@ -20,7 +20,7 @@ static int callback_roombot(struct lws *wsi,
 {
     if(reason == LWS_CALLBACK_ESTABLISHED)
     {
-        //turn on status LED (I like peopele to know when I'm creeping on them through a camera and when it's just software
+        //turn on status LED (I like peopele to know when I'm creeping on them through a camera and when it's just software)
         digitalWrite(STATUS_LED, 1);
     }
     else if(reason == LWS_CALLBACK_CLOSED)
@@ -35,12 +35,15 @@ static int callback_roombot(struct lws *wsi,
         //if we're vaccuming, we don't want to be manually driving at all
         if(isVacOn())
         {
-            if(turnVal == 6)
+            if(turnVal == 6 || turnVal == 7)
             {
                 //yeah, we should turn this off before exiting
                 toggleVac();
             }
-            return 0;
+            if(turnVal == 6)
+            {
+                return 0;
+            }
         }
         switch(turnVal)
         {
@@ -79,6 +82,11 @@ static int callback_roombot(struct lws *wsi,
             case 6:
                 //toggle vaccuming mode
                 toggleVac();
+                break;
+            case 7:
+                //turn off
+                system("/usr/bin/poweroff");
+                exit(0);
                 break;
         }
     }

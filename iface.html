@@ -13,6 +13,16 @@
             #vac
             {
                 color: red;
+                font-size: 15pt;
+                cursor: pointer;
+            }
+            #power
+            {
+                position: absolute;
+                margin: 25px;
+                top: 0;
+                right: 0;
+                color: red;
                 cursor: pointer;
             }
         </style>
@@ -76,9 +86,10 @@
         </head>
     <body>
         <h1 id="title">Roombot CTRL</h1>
+        <button id="power" onclick="websocket.send('7');">Shutdown</button>
         <img id="webcam" src="">
         </br>
         <div id="distance"></div>
-        <h3 id="vac" onclick="websocket.send('6');">Vaccumming</h3>
+        <button id="vac" onclick="websocket.send('6');">Vaccumming</button>
     </body>
 </html>

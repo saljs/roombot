@@ -40,11 +40,11 @@ void* vaccuum(void* arg)
     sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.12", SERVO);
+    fprintf(servo, "%d=0.12\n", SERVO);
     fclose(servo);
     delay(500);
     servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d", SERVO);
+    fprintf(servo, "release %d\n", SERVO);
     fclose(servo);
     while(vacOnbool)
     {
@@ -60,11 +60,11 @@ void* vaccuum(void* arg)
     system(cmd);
 
     servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2", SERVO);
+    fprintf(servo, "%d=0.2\n", SERVO);
     fclose(servo);
     delay(500);
     servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d", SERVO);
+    fprintf(servo, "release %d\n", SERVO);
     fclose(servo);
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
@@ -128,11 +128,11 @@ int initHardware()
     sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
     system(cmd);
     FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2", SERVO);
+    fprintf(servo, "%d=0.2\n", SERVO);
     fclose(servo);
     delay(500);
     servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d", SERVO);
+    fprintf(servo, "release %d\n", SERVO);
     fclose(servo);
 	return 0;
 }
