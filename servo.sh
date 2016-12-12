@@ -6,10 +6,9 @@ DOWN=0.12
 
 /usr/bin/pi-blaster -g $SERVO > /dev/null
 
-if [[ "$1" == "up" ]]
-then
+if [[ "$1" == "up" ]]; then
     echo "$SERVO=$UP" > /dev/pi-blaster
-elif [[ "$1" == "down" ]]
+elif [[ "$1" == "down" ]]; then
     echo "$SERVO=$DOWN" > /dev/pi-blaster
 else
     echo "$SERVO=$1" > /dev/pi-blaster
