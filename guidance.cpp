@@ -36,16 +36,7 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
-    char cmd[38];
-    sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
-    system(cmd);
-    FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.12\n", SERVO);
-    fclose(servo);
-    delay(500);
-    servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d\n", SERVO);
-    fclose(servo);
+    system("/root/roombot/servo.sh down");
     while(vacOnbool)
     {
         turn(mkUpMind());
@@ -57,15 +48,7 @@ void* vaccuum(void* arg)
         delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
     }
-    system(cmd);
-
-    servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2\n", SERVO);
-    fclose(servo);
-    delay(500);
-    servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d\n", SERVO);
-    fclose(servo);
+    system("/root/roombot/servo.sh up");
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;
@@ -124,16 +107,7 @@ int initHardware()
 	pinMode(STATUS_LED, OUTPUT);
 	pinMode(TRIG, OUTPUT);
 	pinMode(ECHO, INPUT);
-    char cmd[38];
-    sprintf(cmd, "/usr/bin/pi-blaster -g %d > /dev/null\n", SERVO);
-    system(cmd);
-    FILE* servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "%d=0.2\n", SERVO);
-    fclose(servo);
-    delay(500);
-    servo = fopen("/dev/pi-blaster", "w");
-    fprintf(servo, "release %d\n", SERVO);
-    fclose(servo);
+    system("/root/roombot/servo.sh up");
 	return 0;
 }
 
