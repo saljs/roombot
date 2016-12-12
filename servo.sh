@@ -10,10 +10,8 @@ if [[ "$1" == "up" ]]
 then
     echo "$SERVO=$UP" > /dev/pi-blaster
 elif [[ "$1" == "down" ]]
-then
     echo "$SERVO=$DOWN" > /dev/pi-blaster
 else
-then
     echo "$SERVO=$1" > /dev/pi-blaster
 fi
 
