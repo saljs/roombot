@@ -95,17 +95,18 @@ void stopCapture()
 }
 
 int initHardware()
-{
-	(wiringPiSetup () == -1)
+{	
+    if(wiringPiSetup () == -1)
     {
         return 1;
     }
 	pinMode(MOTORS, OUTPUT);
 	pinMode(MOTOR_L, OUTPUT);	
     pinMode(MOTOR_R, OUTPUT);
-	pinMode(VAC, OUTPUT);
-	pinMode(STATUS_LED, OUTPUT);
-	(TRIG, OUTPUT);	
+	pinMode(VAC, OUTPUT);	
+    pinMode(STATUS_LED, OUTPUT);
+	
+    pinMode(TRIG, OUTPUT);	
     pinMode(ECHO, INPUT);
     system("/root/roombot/servo.sh up");
 	return 0;
