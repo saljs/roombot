@@ -95,18 +95,19 @@ void stopCapture()
 }
 
 int initHardware()
-{
-	if (wiringPiSetup () == -1)
+{	
+    if(wiringPiSetup () == -1)
     {
         return 1;
     }
 	pinMode(MOTORS, OUTPUT);
-	pinMode(MOTOR_L, OUTPUT);
-	pinMode(MOTOR_R, OUTPUT);
-	pinMode(VAC, OUTPUT);
-	pinMode(STATUS_LED, OUTPUT);
-	pinMode(TRIG, OUTPUT);
-	pinMode(ECHO, INPUT);
+	pinMode(MOTOR_L, OUTPUT);	
+    pinMode(MOTOR_R, OUTPUT);
+	pinMode(VAC, OUTPUT);	
+    pinMode(STATUS_LED, OUTPUT);
+	
+    pinMode(TRIG, OUTPUT);	
+    pinMode(ECHO, INPUT);
     system("/root/roombot/servo.sh up");
 	return 0;
 }
@@ -283,10 +284,9 @@ void turn(int degrees)
         digitalWrite(MOTOR_R, 0);
         //engage turning
         digitalWrite(MOTORS, 1);
-        usleep(1000*DEGREE*degrees);
+        delay(DEGREE*degrees);
         digitalWrite(MOTORS, 0);
     }
-
     else if(degrees > 0)
     {
         //right
@@ -295,7 +295,7 @@ void turn(int degrees)
         digitalWrite(MOTOR_R, 1);
         //engage turning
         digitalWrite(MOTORS, 1);
-        usleep(1000*DEGREE*degrees);
+        delay(DEGREE*degrees);
         digitalWrite(MOTORS, 0);
     }
 }
