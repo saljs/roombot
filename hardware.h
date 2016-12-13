@@ -12,7 +12,7 @@
 
 #define VAC 29
 
-#define FOV 70      //field of view of webcam (degrees)
-#define DEGREE 3    //time taken to rotate one degree (milliseconds)
-#define DRIVE_DUR 1000 //milliseconds to drive for
+#define FOV 53      //field of view of webcam (degrees)
+#define DEGREE 5    //time taken to rotate one degree (milliseconds)
+#define DRIVE_DUR 700 //milliseconds to drive for
 #endif

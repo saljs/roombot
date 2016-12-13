@@ -15,7 +15,7 @@ int mkUpMind();
 void turn(int degrees);
 char* base64img();
 
-#define SENSOR_COORD 320
+#define SENSOR_COORD 355
 #define CLOSE_OBJECT 50
-#define ERR_BAR 25
+#define ERR_BAR 10
 #endif
