@@ -284,7 +284,7 @@ void turn(int degrees)
         digitalWrite(MOTOR_R, 0);
         //engage turning
         digitalWrite(MOTORS, 1);
-        delay(DEGREE*degrees);
+        delay(DEGREE*abs(degrees));
         digitalWrite(MOTORS, 0);
     }
     else if(degrees > 0)
