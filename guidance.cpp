@@ -157,9 +157,18 @@ int mkUpMind()
         digitalWrite(MOTOR_L, 1);
         digitalWrite(MOTOR_R, 1);
         digitalWrite(MOTORS, 1);
-        delay(DRIVE_DUR / 2);
+        delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
-        return 180;
+        //turn left or right randomly (better escape jams)
+        srand(time(NULL));
+        if(rand()%2 == 0)
+        {
+            return 180;
+        }
+        else
+        {
+            return -180;
+        }
     }
     int freq[2048];
     Mat img;
