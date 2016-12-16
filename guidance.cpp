@@ -36,7 +36,7 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
-    system("/root/roombot/servo.sh down");
+
     while(vacOnbool)
     {
         turn(mkUpMind());
@@ -48,7 +48,7 @@ void* vaccuum(void* arg)
         delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
     }
-    system("/root/roombot/servo.sh up");
+
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;
@@ -108,7 +108,7 @@ int initHardware()
 	
     pinMode(TRIG, OUTPUT);	
     pinMode(ECHO, INPUT);
-    system("/root/roombot/servo.sh up");
+
 	return 0;
 }
 
@@ -163,11 +163,11 @@ int mkUpMind()
         srand(time(NULL));
         if(rand()%2 == 0)
         {
-            return 180;
+            return 90;
         }
         else
         {
-            return -180;
+            return -90;
         }
     }
     int freq[2048];
