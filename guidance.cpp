@@ -163,11 +163,11 @@ int mkUpMind()
         srand(time(NULL));
         if(rand()%2 == 0)
         {
-            return 90;
+            return 90;
         }
         else
         {
-            return -90;
+            return -90;
         }
     }
     int freq[2048];
