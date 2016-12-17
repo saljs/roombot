@@ -36,7 +36,7 @@ void* capture(void* arg)
 void* vaccuum(void* arg)
 {
     digitalWrite(VAC, 1);
-
+    delay(1000);
     while(vacOnbool)
     {
         turn(mkUpMind());
