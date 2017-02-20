@@ -27,7 +27,10 @@ void* capture(void* arg)
     }
     while(!closeThread)
     {
-        camera >> cameraFrame;
+        if(!camera.read(cameraFrame))
+        {
+            camera.open(0);
+        }
     }
     pthread_exit(NULL);
     return NULL;
