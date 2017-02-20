@@ -21,11 +21,14 @@ bool closeThread = false, vacOnbool = false;
 void* capture(void* arg)
 {
     VideoCapture camera;
+
     for(int i = 0; i < 5; i++)
     {
         if(camera.open(i))
             break;
     }
+    camera.set(CV_CAP_PROP_FRAME_WIDTH,640);
+    camera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
 
     while(!closeThread)
     {
