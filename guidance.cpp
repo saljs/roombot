@@ -32,7 +32,7 @@ void* capture(void* arg)
 
     while(!closeThread)
     {
-        if(!camera.read(cameraFrame))
+        if(!camera.read(cameraFrame) || !camera.isOpened())
         {
             for(int i = 0; i < 5; i++)
             {
