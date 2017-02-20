@@ -21,15 +21,21 @@ bool closeThread = false, vacOnbool = false;
 void* capture(void* arg)
 {
     VideoCapture camera;
-    if(!camera.open(0))
+    for(int i = 0; i < 5; i++)
     {
-        pthread_exit(NULL);
+        if(camera.open(i))
+            break;
     }
+
     while(!closeThread)
     {
         if(!camera.read(cameraFrame))
         {
-            camera.open(0);
+            for(int i = 0; i < 5; i++)
+            {
+                if(camera.open(i))
+                    break;
+            }
         }
     }
     pthread_exit(NULL);
