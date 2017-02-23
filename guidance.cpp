@@ -62,7 +62,6 @@ void* vaccuum(void* arg)
         delay(200); //wait a fifth of a second to steady the camera
     }
     
-    Lindex = 1000;
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;
