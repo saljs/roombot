@@ -16,6 +16,7 @@ using namespace std;
 using namespace cv;
 
 Mat cameraFrame;
+int Lindex = 1000;
 bool closeThread = false, vacOnbool = false;
 
 void* capture(void* arg)
@@ -40,6 +41,8 @@ void* capture(void* arg)
                     break;
             }
         }
+        //draw nav line on image
+        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 20);
     }
     pthread_exit(NULL);
     return NULL;
@@ -61,7 +64,8 @@ void* vaccuum(void* arg)
         digitalWrite(MOTORS, 0);
         delay(200); //wait a fifth of a second to steady the camera
     }
-
+    
+    Lindex = 1000;
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;
@@ -251,7 +255,7 @@ int mkUpMind()
     waitKey(0);
     */
     //look for the longest flattest bit that is as close to the desired path as possible
-    int index, length = 0, longest = 0, Lindex;
+    int index, length = 0, longest = 0;
     for(int i = 0; i < img.cols; i++)
     {
         if(desPath == minVal && freq[i] <= desPath + ERR_BAR)
@@ -280,8 +284,6 @@ int mkUpMind()
         }
     }
 
-    //draw nav line on image
-    line(cameraFrame, Point(Lindex, 0), Point(Lindex, img.rows), Scalar(0, 255, 0), 20);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
