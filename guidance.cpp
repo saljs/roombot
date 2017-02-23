@@ -59,6 +59,7 @@ void* vaccuum(void* arg)
         digitalWrite(MOTORS, 1);
         delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
+        delay(200); //wait a fifth of a second to steady the camera
     }
 
     digitalWrite(VAC, 0);
@@ -278,6 +279,9 @@ int mkUpMind()
             length = 0;
         }
     }
+
+    //draw nav line on image
+    line(cameraFrame, Point(Lindex, 0), Point(Lindex, img.rows), Scalar(0, 255, 0), 20);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
