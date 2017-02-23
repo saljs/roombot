@@ -276,7 +276,7 @@ int mkUpMind()
     
     //draw nav line on image
     cv::cvtColor(img, procFrame, CV_GRAY2BGR);
-    line(procFrame, Point(Lindex, 0), Point(Lindex, procFrame.rows), Scalar(0, 255, 0), 20);
+    line(procFrame, Point(Lindex, 0), Point(Lindex, procFrame.rows), Scalar(0, 255, 0), longest);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
