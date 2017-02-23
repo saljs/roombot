@@ -15,8 +15,7 @@
 using namespace std;
 using namespace cv;
 
-Mat cameraFrame;
-int Lindex = 1000;
+Mat cameraFrame, procFrame;
 bool closeThread = false, vacOnbool = false;
 
 void* capture(void* arg)
@@ -41,8 +40,6 @@ void* capture(void* arg)
                     break;
             }
         }
-        //draw nav line on image
-        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 20);
     }
     pthread_exit(NULL);
     return NULL;
@@ -132,7 +129,10 @@ int initHardware()
 char* base64img()
 {
     vector<uchar> toSend;
-    imencode(".jpeg", cameraFrame, toSend);
+    if(vacOnbool)
+        imencode(".jpeg", procFrame, toSend);
+    else
+        imencode(".jpeg", cameraFrame, toSend);
     string encoded = base64_encode(&*toSend.begin(), toSend.size());
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
     if(imgstring == NULL)
@@ -255,7 +255,7 @@ int mkUpMind()
     waitKey(0);
     */
     //look for the longest flattest bit that is as close to the desired path as possible
-    int index, length = 0, longest = 0;
+    int index, length = 0, longest = 0, Lindex;
     for(int i = 0; i < img.cols; i++)
     {
         if(desPath == minVal && freq[i] <= desPath + ERR_BAR)
@@ -283,7 +283,10 @@ int mkUpMind()
             length = 0;
         }
     }
-
+    
+    //draw nav line on image
+    cv::cvtColor(img, procFrame, CV_GRAY2BGR);
+    line(procFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 20);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
