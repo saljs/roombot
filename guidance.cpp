@@ -128,7 +128,7 @@ int initHardware()
 char* base64img()
 {
     vector<uchar> toSend;
-    if(vacOnbool)
+    if(vacOnbool && procFrame.data)
         imencode(".jpeg", procFrame, toSend);
     else
         imencode(".jpeg", cameraFrame, toSend);
@@ -244,15 +244,6 @@ int mkUpMind()
     }
     
     //now comes the difficult bit. Use the value distribuion and info obtained from disance to calculate optimum route. It's a small search space so we'll just use a linear search.
-    /*/print out currnet data
-    printf("desPath:%d, maxVal:%d, minVal:%d\n", desPath, maxVal, minVal);
-    for(int i = 0; i < img.cols; i++)
-    {
-        printf("%d,", freq[i]);
-    }
-    imshow("webcam test img", img);
-    waitKey(0);
-    */
     //look for the longest flattest bit that is as close to the desired path as possible
     int index, length = 0, longest = 0, Lindex;
     for(int i = 0; i < img.cols; i++)
@@ -285,7 +276,7 @@ int mkUpMind()
     
     //draw nav line on image
     cv::cvtColor(img, procFrame, CV_GRAY2BGR);
-    line(procFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 20);
+    line(procFrame, Point(Lindex, 0), Point(Lindex, procFrame.rows), Scalar(0, 255, 0), 20);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
