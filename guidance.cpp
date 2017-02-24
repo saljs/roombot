@@ -275,7 +275,7 @@ int mkUpMind()
     }
     
     //draw nav line on image
-    pthread_mutex_lock(&lockImg)
+    pthread_mutex_lock(&lockImg);
     if(longest >= 0 && longest <= 255)
         line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
     else
