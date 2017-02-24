@@ -131,7 +131,9 @@ int initHardware()
 char* base64img()
 {
     vector<uchar> toSend;
+    pthread_mutex_lock(&lockImg);
     imencode(".jpeg", cameraFrame, toSend);
+    pthread_mutex_unlock(&lockImg);
     string encoded = base64_encode(&*toSend.begin(), toSend.size());
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
     if(imgstring == NULL)
