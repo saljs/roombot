@@ -15,7 +15,8 @@
 using namespace std;
 using namespace cv;
 
-Mat cameraFrame, procFrame;
+Mat cameraFrame;
+pthread_mutex_t lockImg = PTHREAD_MUTEX_INITIALIZER;
 bool closeThread = false, vacOnbool = false;
 
 void* capture(void* arg)
@@ -32,6 +33,7 @@ void* capture(void* arg)
 
     while(!closeThread)
     {
+        pthread_mutex_lock(&lockImg);
         if(!camera.read(cameraFrame) || !camera.isOpened())
         {
             for(int i = 0; i < 5; i++)
@@ -40,6 +42,7 @@ void* capture(void* arg)
                     break;
             }
         }
+        pthread_mutex_unlock(&lockImg);
     }
     pthread_exit(NULL);
     return NULL;
@@ -128,10 +131,7 @@ int initHardware()
 char* base64img()
 {
     vector<uchar> toSend;
-    if(vacOnbool && procFrame.data)
-        imencode(".jpeg", procFrame, toSend);
-    else
-        imencode(".jpeg", cameraFrame, toSend);
+    imencode(".jpeg", cameraFrame, toSend);
     string encoded = base64_encode(&*toSend.begin(), toSend.size());
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
     if(imgstring == NULL)
@@ -275,11 +275,12 @@ int mkUpMind()
     }
     
     //draw nav line on image
-    cv::cvtColor(img, procFrame, CV_GRAY2BGR);
+    pthread_mutex_lock(&lockImg)
     if(longest >= 0 && longest <= 255)
-        line(procFrame, Point(Lindex, 0), Point(Lindex, procFrame.rows), Scalar(0, 255, 0), longest);
+        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
     else
-        line(procFrame, Point(Lindex, 0), Point(Lindex, procFrame.rows), Scalar(0, 255, 0), 2);
+        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 2);
+    pthread_mutex_unlock(&lockImg);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
