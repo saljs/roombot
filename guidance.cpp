@@ -33,16 +33,31 @@ void* capture(void* arg)
 
     while(!closeThread)
     {
-        pthread_mutex_lock(&lockImg);
-        if(!camera.read(cameraFrame) || !camera.isOpened())
+        if(pthread_mutex_trylock)
         {
-            for(int i = 0; i < 5; i++)
+            pthread_mutex_lock(&lockImg);
+            if(!camera.read(cameraFrame) || !camera.isOpened())
             {
-                if(camera.open(i))
-                    break;
+                for(int i = 0; i < 5; i++)
+                {
+                    if(camera.open(i))
+                        break;
+                }
+            }
+            pthread_mutex_unlock(&lockImg);
+        }
+        else
+        {
+            Mat junk;
+            if(!camera.read(junk) || !camera.isOpened())
+            {
+                for(int i = 0; i < 5; i++)
+                {
+                    if(camera.open(i))
+                        break;
+                }
             }
         }
-        pthread_mutex_unlock(&lockImg);
     }
     pthread_exit(NULL);
     return NULL;
@@ -190,7 +205,9 @@ int mkUpMind()
     }
     int freq[2048];
     Mat img;
+    pthread_mutex_lock(&lockImg);
     cv::cvtColor(cameraFrame, img, CV_BGR2GRAY);
+    pthread_mutex_unlock(&lockImg);
     int desPath, maxVal = 0, minVal = 255;
     for(int col = 0; col < img.cols; col++)
     {
@@ -277,12 +294,15 @@ int mkUpMind()
     }
     
     //draw nav line on image
-    pthread_mutex_lock(&lockImg);
-    if(longest >= 0 && longest <= 255)
-        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
-    else
-        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 2);
-    pthread_mutex_unlock(&lockImg);
+    if(pthread_mutex_trylock(&lockImg))
+    {
+        pthread_mutex_lock(&lockImg)
+        if(longest >= 0 && longest <= 255)
+            line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
+        else
+            line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 2);
+        pthread_mutex_unlock(&lockImg);
+    }
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
