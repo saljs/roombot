@@ -35,7 +35,6 @@ void* capture(void* arg)
     {
         if(pthread_mutex_trylock(&lockImg) == 0)
         {
-            pthread_mutex_lock(&lockImg);
             if(!camera.read(cameraFrame) || !camera.isOpened())
             {
                 for(int i = 0; i < 5; i++)
@@ -296,7 +295,6 @@ int mkUpMind()
     //draw nav line on image
     if(pthread_mutex_trylock(&lockImg) == 0)
     {
-        pthread_mutex_lock(&lockImg);
         if(longest >= 0 && longest <= 255)
             line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
         else
