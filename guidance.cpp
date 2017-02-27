@@ -293,14 +293,12 @@ int mkUpMind()
     }
     
     //draw nav line on image
-    if(pthread_mutex_trylock(&lockImg) == 0)
-    {
-        if(longest >= 0 && longest <= 255)
-            line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
-        else
-            line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 2);
-        pthread_mutex_unlock(&lockImg);
-    }
+    pthread_mutex_lock(&lockImg);
+    if(longest >= 0 && longest <= 255)
+        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), longest);
+    else
+        line(cameraFrame, Point(Lindex, 0), Point(Lindex, cameraFrame.rows), Scalar(0, 255, 0), 2);
+    pthread_mutex_unlock(&lockImg);
     //calculate degrees of direction
     int degrees;
     if( Lindex - (longest / 2) < img.cols / 2)
