@@ -176,7 +176,7 @@ int readSensor()
     while(digitalRead(ECHO) == HIGH);
     long travelTime = micros() - startTime;
     //Get distance in cm
-    return (int)(travelTime * 0.01715);
+    return (int)((double)travelTime * 0.01715);
 }
                                                 
 int mkUpMind()
