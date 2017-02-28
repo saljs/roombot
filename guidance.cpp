@@ -147,7 +147,7 @@ char* base64img()
     vector<uchar> toSend;
     vector<int> compression_params;
     compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
-    compression_params.push_back(25);
+    compression_params.push_back(FEED_QUAL);
     pthread_mutex_lock(&lockImg);
     imencode(".jpeg", cameraFrame, toSend, compression_params); //low quality jpeg
     pthread_mutex_unlock(&lockImg);
