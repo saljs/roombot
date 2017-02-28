@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>Roombot CTRL</title>
         <link rel="stylesheet" type="text/css" href="http://lsblk.tk/stylesheet.css">
+        <link rel="icon" type="image/png" href="stuffs/favicon.png">
         <style>
             body
             {
@@ -28,6 +29,7 @@
             #webcam
             {
                 max-width: 100%;
+                height: auto;
             }
         </style>
         <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -95,5 +97,13 @@
         </br>
         <div id="distance"></div>
         <button id="vac" onclick="websocket.send('6');">Vaccumming</button>
+        <br>
+        <div id="arrows">
+            <span onclick="websocket.send('2');">&#8593;</span>
+            <br>
+            <span onclick="websocket.send('4');">&#8592;</span>
+            <span onclick="websocket.send('3');">&#8595;</span>
+            <span onclick="websocket.send('5');">&#8594;</span>
+        </div>
     </body>
 </html>
