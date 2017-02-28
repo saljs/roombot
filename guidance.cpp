@@ -145,8 +145,11 @@ int initHardware()
 char* base64img()
 {
     vector<uchar> toSend;
+    vector<int> compression_params;
+    compression_params.push_back(CV_IMWRITE_JPEG_QUALITY);
+    compression_params.push_back(25);
     pthread_mutex_lock(&lockImg);
-    imencode(".jpeg", cameraFrame, toSend, 25); //low quality jpeg
+    imencode(".jpeg", cameraFrame, toSend, compression_params); //low quality jpeg
     pthread_mutex_unlock(&lockImg);
     string encoded = base64_encode(&*toSend.begin(), toSend.size());
     char* imgstring = (char *)malloc(strlen(encoded.c_str()) + 25);
