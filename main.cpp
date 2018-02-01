@@ -6,12 +6,18 @@
 #include "guidance.h"
 #include "hardware.h"
 
+#define WEBCODE "client.html"
+
 int distance;
 
 static int callback_http(struct lws *wsi,
                          enum lws_callback_reasons reason, void *user,
                          void *in, size_t len)
 {
+    if(reason == LWS_CALLBACK_HTTP) {
+        //serve up the code for the client to run
+        libwebsockets_serve_http_file(wsi, WEBCODE, "text/html");
+    }
     return 0;
 }
 static int callback_roombot(struct lws *wsi,

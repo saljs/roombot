@@ -16,8 +16,5 @@ guidance.o: guidance.cpp
 base64.o: base64.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) -c base64.cpp
 
-cameratest: cameratest.cpp
-	$(CC) $(CFLAGS) $(LDFLAGS) cameratest.cpp -o cameratest
-
 clean:
 	rm *.o roombot cameratest

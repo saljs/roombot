@@ -7,10 +7,16 @@
 #define MOTOR_R 22
 #define MOTOR_L 21
 
-#define TRIG 26
-#define ECHO 27
+#define TRIG_F 26
+#define ECHO_F 27
 
-#define VAC 29
+#define TRIG_L 24
+#define ECHO_L 25
+
+#define TRIG_R 28
+#define ECHO_R 29
+
+#define VAC 7
 
 #define FOV 53      //field of view of webcam (degrees)
 #define DEGREE 5.3  //time taken to rotate one degree (milliseconds)

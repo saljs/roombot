@@ -10,9 +10,10 @@ bool isVacOn();
 void startCapture();
 void stopCapture();
 int initHardware();
-int readSensor();
+int readSensor(int trig, int echo);
 int mkUpMind();
 void turn(int degrees);
+void drunkWalk();
 char* base64img();
 
 #define SENSOR_COORD 355 //coordinates of distance sensor on the camera image

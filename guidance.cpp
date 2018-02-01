@@ -68,17 +68,8 @@ void* vaccuum(void* arg)
     delay(1000);
     while(vacOnbool)
     {
-        turn(mkUpMind());
-        //go forward
-        digitalWrite(MOTORS, 0);
-        digitalWrite(MOTOR_L, 0);
-        digitalWrite(MOTOR_R, 0);
-        digitalWrite(MOTORS, 1);
-        delay(DRIVE_DUR);
-        digitalWrite(MOTORS, 0);
-        delay(200); //wait a fifth of a second to steady the camera
+        drunkWalk();
     }
-    
     digitalWrite(VAC, 0);
     pthread_exit(NULL);
     return NULL;
@@ -133,13 +124,20 @@ int initHardware()
 	pinMode(MOTORS, OUTPUT);
 	pinMode(MOTOR_L, OUTPUT);	
     pinMode(MOTOR_R, OUTPUT);
-	pinMode(VAC, OUTPUT);	
+	
+    pinMode(VAC, OUTPUT);	
     pinMode(STATUS_LED, OUTPUT);
 	
-    pinMode(TRIG, OUTPUT);	
-    pinMode(ECHO, INPUT);
+    pinMode(TRIG_F, OUTPUT);	
+    pinMode(ECHO_F, INPUT);
 
-	return 0;
+    pinMode(TRIG_L, OUTPUT);	
+    pinMode(ECHO_L, INPUT);
+    
+    pinMode(TRIG_R, OUTPUT);	
+    pinMode(ECHO_R, INPUT);
+	
+    return 0;
 }
 
 char* base64img()
@@ -163,20 +161,20 @@ char* base64img()
     return imgstring;
 }
 
-int readSensor()
+int readSensor(int trig, int echo)
 {
     //we don't want to get stuck in an infinite loop, so set a small timout
     time_t timeout = time(NULL);
     //Send TRIG pulse
-    digitalWrite(TRIG, HIGH);
+    digitalWrite(trig, HIGH);
     delayMicroseconds(10);
-    digitalWrite(TRIG, LOW);
+    digitalWrite(trig, LOW);
     //Wait for ECHO start
-    while(digitalRead(ECHO) == LOW && time(NULL) - timeout < 2);
+    while(digitalRead(echo) == LOW && time(NULL) - timeout < 2);
     //Wait for ECHO end
     timeout = time(NULL);
     long startTime = micros();
-    while(digitalRead(ECHO) == HIGH && time(NULL) - timeout < 2);
+    while(digitalRead(echo) == HIGH && time(NULL) - timeout < 2);
     long travelTime = micros() - startTime;
     //Get distance in cm
     return (int)((double)travelTime * 0.01715);
@@ -184,27 +182,45 @@ int readSensor()
                                                 
 int mkUpMind()
 {
-    int distance = readSensor();
-    if(distance < 20)
+    //start off with some manual checks to keep from hitting stuff too much
+    int distance_front = readSensor(TRIG_F, ECHO_F);
+    int distance_left = readSensor(TRIG_L, ECHO_L);
+    int distance_right = readSensor(TRIG_R, ECHO_R);
+
+    if(distance_front < 20)
     {
         //we are close to a thing here. Back up a bit and turn around.
         digitalWrite(MOTORS, 0);
         digitalWrite(MOTOR_L, 1);
         digitalWrite(MOTOR_R, 1);
         digitalWrite(MOTORS, 1);
-        delay(DRIVE_DUR);
+        while(readSensor(TRIG_F, ECHO_F) < 20) 
+            delay(DRIVE_DUR);
         digitalWrite(MOTORS, 0);
-        //turn left or right randomly (better escape jams)
-        srand(time(NULL));
-        if(rand()%2 == 0)
+        
+        //turn left or right
+        if(if(readSensor(TRIG_L, ECHO_L) < readSensor(TRIG_R, ECHO_R))
         {
+            //turn right
             return 90;
         }
         else
         {
+            //turn left
             return -90;
         }
     }
+    else if(distance_left < 20) 
+    {
+        //turn right
+        return 90;
+    }
+    else if(distance_right < 20) 
+    {
+        //turn left
+        return -90;
+    }
+
     int freq[2048];
     Mat img;
     pthread_mutex_lock(&lockImg);
@@ -343,4 +359,17 @@ void turn(int degrees)
         delay(DEGREE*degrees);
         digitalWrite(MOTORS, 0);
     }
+}
+
+void drunkWalk()
+{
+    turn(mkUpMind());
+    //go forward
+    digitalWrite(MOTORS, 0);
+    digitalWrite(MOTOR_L, 0);
+    digitalWrite(MOTOR_R, 0);
+    digitalWrite(MOTORS, 1);
+    delay(DRIVE_DUR);
+    digitalWrite(MOTORS, 0);
+    delay(200); //wait a fifth of a second to steady the camera
 }
