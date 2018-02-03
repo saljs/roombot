@@ -199,7 +199,7 @@ int mkUpMind()
         digitalWrite(MOTORS, 0);
         
         //turn left or right
-        if(if(readSensor(TRIG_L, ECHO_L) < readSensor(TRIG_R, ECHO_R))
+        if(readSensor(TRIG_L, ECHO_L) < readSensor(TRIG_R, ECHO_R))
         {
             //turn right
             return 90;
@@ -255,7 +255,7 @@ int mkUpMind()
     sensorAvgColor = sum / 20;
 
     //determine obstical values to use
-    if(distance > CLOSE_OBJECT)
+    if(distance_front > CLOSE_OBJECT)
     {
         //far away distance reading
         if(sensorAvgColor < midpt) //light obsticals
