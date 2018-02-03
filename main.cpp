@@ -16,7 +16,7 @@ static int callback_http(struct lws *wsi,
 {
     if(reason == LWS_CALLBACK_HTTP) {
         //serve up the code for the client to run
-        libwebsockets_serve_http_file(wsi, WEBCODE, "text/html");
+        lws_serve_http_file(wsi, WEBCODE, "text/html");
     }
     return 0;
 }
@@ -26,7 +26,8 @@ static int callback_roombot(struct lws *wsi,
 {
     if(reason == LWS_CALLBACK_ESTABLISHED)
     {
-        //turn on status LED (I like peopele to know when I'm creeping on them through a camera and when it's just software)
+        //turn on status LED (I like peopele to know when I'm creeping on them 
+        //through a camera and when it's just software)
         digitalWrite(STATUS_LED, 1);
     }
     else if(reason == LWS_CALLBACK_CLOSED)
@@ -188,8 +189,9 @@ int main(void)
     while (1) 
     {
         lws_service(context, 100);
-        distance = readSensor();
-        if(!isVacOn() && distance < 20 && digitalRead(MOTORS) == 1 && digitalRead(MOTOR_L) == 0 && digitalRead(MOTOR_R) == 0)
+        distance = readSensor(TRIG_F, ECHO_F);
+        if(!isVacOn() && distance < 20 && digitalRead(MOTORS) == 1 && 
+                digitalRead(MOTOR_L) == 0 && digitalRead(MOTOR_R) == 0)
         {
             digitalWrite(MOTORS, 0);
         }
