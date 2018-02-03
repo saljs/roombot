@@ -16,7 +16,7 @@ static int callback_http(struct lws *wsi,
 {
     if(reason == LWS_CALLBACK_HTTP) {
         //serve up the code for the client to run
-        lws_serve_http_file(wsi, WEBCODE, "text/html");
+        lws_serve_http_file(wsi, WEBCODE, "text/html", null, 0);
     }
     return 0;
 }
