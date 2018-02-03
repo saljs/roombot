@@ -18,6 +18,8 @@
 
 #define VAC 7
 
+#define WEBCODE "/root/roombot/client.html" //interface file
+
 #define FOV 53      //field of view of webcam (degrees)
 #define DEGREE 5.3  //time taken to rotate one degree (milliseconds)
 #define DRIVE_DUR 330 //milliseconds to drive for

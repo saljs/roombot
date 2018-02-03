@@ -6,8 +6,6 @@
 #include "guidance.h"
 #include "hardware.h"
 
-#define WEBCODE "client.html"
-
 int distance;
 
 static int callback_http(struct lws *wsi,
