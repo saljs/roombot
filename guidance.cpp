@@ -7,6 +7,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/opencv_modules.hpp"
 #include <wiringPi.h>
 
 #include "guidance.h"
@@ -64,15 +65,35 @@ void* capture(void* arg)
 
 void* vaccuum(void* arg)
 {
+    time_t timeout = time(NULL);
     digitalWrite(VAC, 1);
     delay(1000);
     while(vacOnbool)
     {
         drunkWalk();
+        if(time(NULL) - timeout > VAC_TIME)
+        {
+            vacOnbool = false;
+        }
     }
     digitalWrite(VAC, 0);
+    charge();
     pthread_exit(NULL);
     return NULL;
+}
+void* startCharge(void* arg)
+{
+    while(directedWalk());
+    system("/usr/bin/poweroff");
+    exit(0);
+    pthread_exit(NULL);
+    return NULL;
+}
+
+void charge()
+{
+    pthread_t chargeThread;
+    pthread_create(&chargeThread, NULL, startCharge, NULL);
 }
 
 void toggleVac()
@@ -372,4 +393,118 @@ void drunkWalk()
     delay(DRIVE_DUR);
     digitalWrite(MOTORS, 0);
     delay(200); //wait a fifth of a second to steady the camera
+}
+
+int findCharger()
+{
+    Mat target = imread(QR_CODE, CV_LOAD_IMAGE_GRAYSCALE);
+    Mat img;
+    pthread_mutex_lock(&lockImg);
+    cv::cvtColor(cameraFrame, img, CV_BGR2GRAY);
+    pthread_mutex_unlock(&lockImg);
+    //-- Step 1: Detect the keypoints using SURF Detector
+    int minHessian = 400;
+    
+    SurfFeatureDetector detector(minHessian);
+    
+    std::vector<KeyPoint> keypoints_1, keypoints_2;
+    
+    detector.detect(img, keypoints_1);
+    detector.detect(target, keypoints_2);
+    
+    //-- Step 2: Calculate descriptors (feature vectors)
+    SurfDescriptorExtractor extractor;
+    
+    Mat descriptors_1, descriptors_2;
+    
+    extractor.compute(img, keypoints_1, descriptors_1);
+    extractor.compute(target, keypoints_2, descriptors_2);
+    
+    //-- Step 3: Matching descriptor vectors using FLANN matcher
+    FlannBasedMatcher matcher;
+    std::vector< DMatch > matches;
+    matcher.match( descriptors_1, descriptors_2, matches );
+    
+    double max_dist = 0; double min_dist = 100;
+    
+    //-- Quick calculation of max and min distances between keypoints
+    for(int i = 0; i < descriptors_1.rows; i++)
+    { 
+        double dist = matches[i].distance;
+        if(dist < min_dist) 
+            min_dist = dist;
+        if(dist > max_dist) 
+            max_dist = dist;
+    }
+    
+    //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
+    //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very
+    //-- small)
+    //-- PS.- radiusMatch can also be used here.
+    std::vector< DMatch > good_matches;
+    double totalDist = 0.0;
+    
+    for(int i = 0; i < descriptors_1.rows; i++)
+    { 
+        if(matches[i].distance <= max(2*min_dist, 0.02))
+        {
+            good_matches.push_back(matches[i]); 
+            totalDist += matches[i].distance;
+        }
+    }
+    double avgDist = 1.0 - (totalDist / (int)good_matches.size());
+    
+    if(avgDist < MATCH_THRESH) 
+    {
+        return mkUpMind();
+    }
+    else if(readSensor(TRIG_F, ECHO_F) <= 5.0)
+    {
+        //magic number that breaks out of the condition
+        retrurn 1000;
+    }
+
+    //find the center of the code
+    double sumPts = 0.0;
+    for(int i = 0; i < (int)good_matches.size(); i++ )
+    {
+        sumPts += key_points1[good_matches[i].queryIdx].pt.x;
+    }
+    double index = sumPts / (double)good_matches.size();
+    //draw nav line on image
+    pthread_mutex_lock(&lockImg);
+    line(cameraFrame, Point(index, 0), Point(index, cameraFrame.rows), Scalar(0, 255, 0), 10);
+    pthread_mutex_unlock(&lockImg);
+    
+    //calculate degrees
+    int degrees;
+    if(index < img.cols / 2)
+    {
+        //turn left
+        degrees = -(FOV / 2) + (((double)index / (img.cols / 2)) * (FOV / 2));
+    }
+    else
+    {
+        //turn right
+        degrees = (((double)index - (img.cols / 2)) / (img.cols / 2)) * (FOV / 2);
+    }
+
+    return degrees;
+}
+
+bool directedWalk()
+{
+    int degrees = findCharger();
+    if(degrees == 100)
+        return false;
+    turn(degrees);
+    //go forward
+    digitalWrite(MOTORS, 0);
+    digitalWrite(MOTOR_L, 0);
+    digitalWrite(MOTOR_R, 0);
+    digitalWrite(MOTORS, 1);
+    delay(DRIVE_DUR);
+    digitalWrite(MOTORS, 0);
+    delay(200); //wait a fifth of a second to steady the camera
+    return true;
 }
