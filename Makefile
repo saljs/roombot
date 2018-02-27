@@ -17,7 +17,7 @@ base64.o: base64.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) -c base64.cpp
 
 sensortest: sensortest.cpp
-	$(CC) $(CFLAGS) $(LDFLAGS) sensortest.cpp guidance.cpp -o sensortest
+	$(CC) $(CFLAGS) $(LDFLAGS) sensortest.cpp guidance.cpp base64.cpp -o sensortest
 
 clean:
 	rm *.o roombot
